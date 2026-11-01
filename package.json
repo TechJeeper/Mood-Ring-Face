@@ -1,0 +1,76 @@
+{
+  "name": "moodring-face",
+  "author": "caffeinegamer",
+  "version": "1.0.0",
+  "keywords": [
+    "pebble-app",
+    "watchface",
+    "heart-rate",
+    "mood",
+    "health"
+  ],
+  "private": true,
+  "dependencies": {
+    "@rebble/clay": "^1.1.0"
+  },
+  "pebble": {
+    "displayName": "Mood Ring Face",
+    "uuid": "b92178e5-ba83-45e0-861a-b2c34463ff48",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+      "emery",
+      "basalt",
+      "diorite",
+      "flint"
+    ],
+    "watchapp": {
+      "watchface": true
+    },
+    "capabilities": [
+      "configurable",
+      "health"
+    ],
+    "messageKeys": [
+      "TimeFormat",
+      "LeadingZero",
+      "ShowBpm",
+      "ShowMoodLabel",
+      "ShowDate",
+      "DemoMode",
+      "RelaxedMax",
+      "CalmMax",
+      "AlertMax"
+    ],
+    "resources": {
+      "media": [
+        {
+          "type": "bitmap",
+          "name": "IMAGE_MENU_ICON",
+          "file": "images/menu_icon.png",
+          "menuIcon": true
+        },
+        {
+          "type": "bitmap",
+          "name": "IMAGE_FACE_RELAXED",
+          "file": "images/face_relaxed.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "IMAGE_FACE_CALM",
+          "file": "images/face_calm.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "IMAGE_FACE_ALERT",
+          "file": "images/face_alert.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "IMAGE_FACE_ANXIOUS",
+          "file": "images/face_anxious.png"
+        }
+      ]
+    }
+  }
+}
