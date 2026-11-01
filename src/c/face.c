@@ -81,10 +81,10 @@ static void update_proc(Layer *layer, GContext *ctx) {
   graphics_fill_rect(ctx, bounds, 0, GCornerNone);
 
   // Caption band at the bottom (mood + BPM).
-  const int caption_h = 40;
+  const int caption_h = 42;
   const int time_bottom = cfg->show_date ? 64 : 48;
 
-  // Face sits between the time band and the captions.
+  // Vertically center the face in the band between time and captions.
   GBitmap *face = s_faces[mood->level];
   if (face) {
     GSize sz = gbitmap_get_bounds(face).size;
@@ -94,13 +94,14 @@ static void update_proc(Layer *layer, GContext *ctx) {
       bounce = ((s_pulse + (int)mood->level) % 8 < 4) ? amp : 0;
     }
 
-    int face_y = time_bottom + 2 - bounce;
-    int max_y = bounds.size.h - caption_h - sz.h;
-    if (face_y > max_y) {
-      face_y = max_y;
+    const int band_top = time_bottom;
+    const int band_bot = bounds.size.h - caption_h;
+    int face_y = band_top + (band_bot - band_top - sz.h) / 2 - bounce;
+    if (face_y < band_top) {
+      face_y = band_top;
     }
-    if (face_y < time_bottom) {
-      face_y = time_bottom;
+    if (face_y + sz.h > band_bot) {
+      face_y = band_bot - sz.h;
     }
 
     GRect dest = GRect((bounds.size.w - sz.w) / 2, face_y, sz.w, sz.h);

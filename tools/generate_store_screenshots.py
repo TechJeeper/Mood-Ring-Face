@@ -168,8 +168,16 @@ def render(w: int, h: int, color: bool, scene: dict) -> Image.Image:
     face_size = 72 if w >= 200 else 56
     face = load_face(scene["character"], scene["face"], color, face_size)
     face_x = (w - face_size) // 2
-    # Keep the sprite below time (and date when shown)
-    face_y = (52 if w >= 200 else 44) if scene.get("show_date") else (38 if w >= 200 else 30)
+    # Match watchface.c: center sprite between time band and caption band
+    time_bottom = 64 if scene.get("show_date") else 48
+    caption_h = 42
+    band_top = time_bottom
+    band_bot = h - caption_h
+    face_y = band_top + (band_bot - band_top - face_size) // 2
+    if face_y < band_top:
+        face_y = band_top
+    if face_y + face_size > band_bot:
+        face_y = band_bot - face_size
     img.paste(face, (face_x, face_y), face)
 
     if color:
