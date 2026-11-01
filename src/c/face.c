@@ -80,45 +80,29 @@ static void update_proc(Layer *layer, GContext *ctx) {
   graphics_context_set_fill_color(ctx, bg);
   graphics_fill_rect(ctx, bounds, 0, GCornerNone);
 
-  // Soft vignette band at top/bottom on color for depth.
-#if defined(PBL_COLOR)
-  graphics_context_set_fill_color(ctx, GColorBlack);
-  graphics_context_set_compositing_mode(ctx, GCompOpSet);
-#endif
+  // Caption band at the bottom (mood + BPM).
+  const int caption_h = 40;
+  const int time_bottom = cfg->show_date ? 64 : 48;
 
-  char time_buf[16];
-  format_time(time_buf, sizeof(time_buf));
-  graphics_context_set_text_color(ctx, fg);
-  graphics_draw_text(ctx, time_buf,
-                     fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS),
-                     GRect(0, 4, bounds.size.w, 48),
-                     GTextOverflowModeTrailingEllipsis,
-                     GTextAlignmentCenter, NULL);
-
-  if (cfg->show_date) {
-    char date_buf[24];
-    format_date(date_buf, sizeof(date_buf));
-    graphics_draw_text(ctx, date_buf,
-                       fonts_get_system_font(FONT_KEY_GOTHIC_14),
-                       GRect(0, 48, bounds.size.w, 18),
-                       GTextOverflowModeTrailingEllipsis,
-                       GTextAlignmentCenter, NULL);
-  }
-
-  // Face with a tiny BPM-linked pulse bounce.
+  // Face sits between the time band and the captions.
   GBitmap *face = s_faces[mood->level];
   if (face) {
     GSize sz = gbitmap_get_bounds(face).size;
     int bounce = 0;
     if (mood->has_hr || cfg->demo_mode) {
-      // Faster pulse when more anxious.
       int amp = 1 + (int)mood->level;
       bounce = ((s_pulse + (int)mood->level) % 8 < 4) ? amp : 0;
     }
-    int face_y = 34 - bounce;
-    if (cfg->show_date) {
-      face_y += 14;
+
+    int face_y = time_bottom + 2 - bounce;
+    int max_y = bounds.size.h - caption_h - sz.h;
+    if (face_y > max_y) {
+      face_y = max_y;
     }
+    if (face_y < time_bottom) {
+      face_y = time_bottom;
+    }
+
     GRect dest = GRect((bounds.size.w - sz.w) / 2, face_y, sz.w, sz.h);
 #if defined(PBL_COLOR)
     graphics_context_set_compositing_mode(ctx, GCompOpSet);
@@ -127,12 +111,16 @@ static void update_proc(Layer *layer, GContext *ctx) {
 #endif
     graphics_draw_bitmap_in_rect(ctx, face, dest);
 
-    // Mood ring outline around the character (kept above the caption band).
 #if defined(PBL_COLOR)
     {
       int cx = bounds.size.w / 2;
-      int cy = face_y + sz.h / 2 + 2;
-      int r = (sz.w / 2) + 6 + ((s_pulse % 4 == 0) ? 1 : 0);
+      int cy = face_y + sz.h / 2;
+      int r = (sz.w / 2) + 4 + ((s_pulse % 4 == 0) ? 1 : 0);
+      // Keep ring from eating into the caption band.
+      int max_r = (bounds.size.h - caption_h) - cy - 2;
+      if (r > max_r && max_r > 8) {
+        r = max_r;
+      }
       graphics_context_set_stroke_color(ctx, fg);
       graphics_context_set_stroke_width(ctx, 2);
       graphics_draw_circle(ctx, GPoint(cx, cy), r);
@@ -142,12 +130,31 @@ static void update_proc(Layer *layer, GContext *ctx) {
 #endif
   }
 
-  int bottom = bounds.size.h - 40;
+  // Draw time/date last so they always sit above the sprite.
+  char time_buf[16];
+  format_time(time_buf, sizeof(time_buf));
+  graphics_context_set_text_color(ctx, fg);
+  graphics_draw_text(ctx, time_buf,
+                     fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS),
+                     GRect(0, 2, bounds.size.w, 44),
+                     GTextOverflowModeTrailingEllipsis,
+                     GTextAlignmentCenter, NULL);
+
+  if (cfg->show_date) {
+    char date_buf[24];
+    format_date(date_buf, sizeof(date_buf));
+    graphics_draw_text(ctx, date_buf,
+                       fonts_get_system_font(FONT_KEY_GOTHIC_14),
+                       GRect(0, 44, bounds.size.w, 18),
+                       GTextOverflowModeTrailingEllipsis,
+                       GTextAlignmentCenter, NULL);
+  }
+
   if (cfg->show_mood_label) {
     graphics_context_set_text_color(ctx, fg);
     graphics_draw_text(ctx, mood_label(mood->level),
                        fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD),
-                       GRect(0, bottom, bounds.size.w, 22),
+                       GRect(0, bounds.size.h - 40, bounds.size.w, 22),
                        GTextOverflowModeTrailingEllipsis,
                        GTextAlignmentCenter, NULL);
   }
@@ -164,7 +171,7 @@ static void update_proc(Layer *layer, GContext *ctx) {
     graphics_context_set_text_color(ctx, fg);
     graphics_draw_text(ctx, bpm_buf,
                        fonts_get_system_font(FONT_KEY_GOTHIC_14),
-                       GRect(0, bounds.size.h - 22, bounds.size.w, 18),
+                       GRect(0, bounds.size.h - 20, bounds.size.w, 18),
                        GTextOverflowModeTrailingEllipsis,
                        GTextAlignmentCenter, NULL);
   }

@@ -57,7 +57,13 @@ python tools/generate_store_screenshots.py
 | flint (Pebble 2 Duo) | 144×168 | `store/screenshots/flint/` |
 | emery (Pebble Time 2) | 200×228 | `store/screenshots/emery/` |
 
-Five shots per platform: Relaxed, Calm (+date), Alert, Anxious, No HR.
+Five shots per platform showcasing face variants + moods:
+
+1. Mia · Relaxed  
+2. Kai · Calm (+date)  
+3. Nova · Alert  
+4. Cat · Anxious  
+5. Fox · Calm
 
 ## Listing checklist
 
