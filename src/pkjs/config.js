@@ -46,6 +46,32 @@ module.exports = [
     items: [
       {
         type: 'heading',
+        defaultValue: 'Character'
+      },
+      {
+        type: 'select',
+        messageKey: 'Character',
+        defaultValue: '0',
+        label: 'Face',
+        options: [
+          { label: 'Mia (girl)', value: '0' },
+          { label: 'Kai (boy)', value: '1' },
+          { label: 'Nova (glasses)', value: '2' },
+          { label: 'Rex (beard)', value: '3' },
+          { label: 'Cat', value: '4' },
+          { label: 'Dog', value: '5' },
+          { label: 'Fox', value: '6' },
+          { label: 'Owl', value: '7' }
+        ]
+      }
+    ]
+  },
+
+  {
+    type: 'section',
+    items: [
+      {
+        type: 'heading',
         defaultValue: 'Mood'
       },
       {

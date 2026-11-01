@@ -2,6 +2,8 @@
 
 An 8-bit mood ring watchface. It reads your live heart rate, estimates stress from BPM, and shifts both the background color and a PixelLab character’s expression — from relaxed blue to anxious red.
 
+Pick a face in Settings: **Mia**, **Kai**, **Nova**, **Rex**, or animals **Cat**, **Dog**, **Fox**, **Owl**.
+
 ## Moods
 
 | Mood | Default BPM | Color |
@@ -41,6 +43,16 @@ Output: `build/MoodRingFace.pbw`
 
 Import `dist/Mood-Ring-Face-cloudpebble.zip` into CloudPebble (or rebuild it with
 `python build-env/make_zip.py`).
+
+## Appstore
+
+Listing copy and screenshot notes: [`STORE.md`](STORE.md).
+
+```powershell
+python tools/generate_store_screenshots.py
+```
+
+Output: `store/screenshots/{basalt,diorite,flint,emery}/` at exact Rebble sizes.
 
 ## Layout
 

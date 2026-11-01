@@ -1,11 +1,13 @@
 #include "face.h"
 #include "mood.h"
 #include "settings.h"
+#include "characters.h"
 
 static Window *s_window;
 static Layer *s_layer;
 
 static GBitmap *s_faces[MOOD_COUNT];
+static int s_loaded_character = -1;
 
 static int s_hour;
 static int s_minute;
@@ -15,12 +17,26 @@ static int s_mday;
 static int s_mon;
 static int s_pulse;  // 0..7 for subtle bounce
 
-static const uint32_t FACE_RES[MOOD_COUNT] = {
-  RESOURCE_ID_IMAGE_FACE_RELAXED,
-  RESOURCE_ID_IMAGE_FACE_CALM,
-  RESOURCE_ID_IMAGE_FACE_ALERT,
-  RESOURCE_ID_IMAGE_FACE_ANXIOUS,
-};
+static void unload_faces(void) {
+  for (int i = 0; i < MOOD_COUNT; i++) {
+    if (s_faces[i]) {
+      gbitmap_destroy(s_faces[i]);
+      s_faces[i] = NULL;
+    }
+  }
+  s_loaded_character = -1;
+}
+
+static void load_faces(CharacterId id) {
+  if (s_loaded_character == (int)id) {
+    return;
+  }
+  unload_faces();
+  for (int i = 0; i < MOOD_COUNT; i++) {
+    s_faces[i] = gbitmap_create_with_resource(character_resource(id, (MoodLevel)i));
+  }
+  s_loaded_character = (int)id;
+}
 
 static bool use_24h(void) {
   const FaceSettings *s = settings_get();
@@ -99,7 +115,10 @@ static void update_proc(Layer *layer, GContext *ctx) {
       int amp = 1 + (int)mood->level;
       bounce = ((s_pulse + (int)mood->level) % 8 < 4) ? amp : 0;
     }
-    int face_y = (bounds.size.h / 2) - (sz.h / 2) + 6 - bounce;
+    int face_y = 34 - bounce;
+    if (cfg->show_date) {
+      face_y += 14;
+    }
     GRect dest = GRect((bounds.size.w - sz.w) / 2, face_y, sz.w, sz.h);
 #if defined(PBL_COLOR)
     graphics_context_set_compositing_mode(ctx, GCompOpSet);
@@ -107,23 +126,23 @@ static void update_proc(Layer *layer, GContext *ctx) {
     graphics_context_set_compositing_mode(ctx, GCompOpAssign);
 #endif
     graphics_draw_bitmap_in_rect(ctx, face, dest);
-  }
 
-  // Mood ring outline around the character.
+    // Mood ring outline around the character (kept above the caption band).
 #if defined(PBL_COLOR)
-  {
-    int cx = bounds.size.w / 2;
-    int cy = bounds.size.h / 2 + 8;
-    int r = 40 + ((s_pulse % 4 == 0) ? 1 : 0);
-    graphics_context_set_stroke_color(ctx, fg);
-    graphics_context_set_stroke_width(ctx, 2);
-    graphics_draw_circle(ctx, GPoint(cx, cy), r);
-    graphics_context_set_stroke_width(ctx, 1);
-    graphics_draw_circle(ctx, GPoint(cx, cy), r + 4);
-  }
+    {
+      int cx = bounds.size.w / 2;
+      int cy = face_y + sz.h / 2 + 2;
+      int r = (sz.w / 2) + 6 + ((s_pulse % 4 == 0) ? 1 : 0);
+      graphics_context_set_stroke_color(ctx, fg);
+      graphics_context_set_stroke_width(ctx, 2);
+      graphics_draw_circle(ctx, GPoint(cx, cy), r);
+      graphics_context_set_stroke_width(ctx, 1);
+      graphics_draw_circle(ctx, GPoint(cx, cy), r + 3);
+    }
 #endif
+  }
 
-  int bottom = bounds.size.h - 44;
+  int bottom = bounds.size.h - 40;
   if (cfg->show_mood_label) {
     graphics_context_set_text_color(ctx, fg);
     graphics_draw_text(ctx, mood_label(mood->level),
@@ -131,7 +150,6 @@ static void update_proc(Layer *layer, GContext *ctx) {
                        GRect(0, bottom, bounds.size.w, 22),
                        GTextOverflowModeTrailingEllipsis,
                        GTextAlignmentCenter, NULL);
-    bottom += 20;
   }
 
   if (cfg->show_bpm) {
@@ -165,9 +183,7 @@ static void mark_dirty(void) {
 
 void face_init(Window *window) {
   s_window = window;
-  for (int i = 0; i < MOOD_COUNT; i++) {
-    s_faces[i] = gbitmap_create_with_resource(FACE_RES[i]);
-  }
+  load_faces((CharacterId)settings_get()->character);
 
   Layer *root = window_get_root_layer(window);
   s_layer = layer_create(layer_get_bounds(root));
@@ -183,12 +199,7 @@ void face_deinit(void) {
     layer_destroy(s_layer);
     s_layer = NULL;
   }
-  for (int i = 0; i < MOOD_COUNT; i++) {
-    if (s_faces[i]) {
-      gbitmap_destroy(s_faces[i]);
-      s_faces[i] = NULL;
-    }
-  }
+  unload_faces();
   s_window = NULL;
 }
 
@@ -206,6 +217,7 @@ void face_tick(void) {
 }
 
 void face_apply_settings(void) {
+  load_faces((CharacterId)settings_get()->character);
   mark_dirty();
 }
 

@@ -16,6 +16,7 @@ typedef struct {
   bool show_mood_label;
   bool show_date;
   bool demo_mode;
+  int character;  // CharacterId
   int relaxed_max;
   int calm_max;
   int alert_max;

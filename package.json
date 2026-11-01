@@ -1,7 +1,7 @@
 {
   "name": "moodring-face",
   "author": "caffeinegamer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "keywords": [
     "pebble-app",
     "watchface",
@@ -38,6 +38,7 @@
       "ShowMoodLabel",
       "ShowDate",
       "DemoMode",
+      "Character",
       "RelaxedMax",
       "CalmMax",
       "AlertMax"
@@ -50,26 +51,38 @@
           "file": "images/menu_icon.png",
           "menuIcon": true
         },
-        {
-          "type": "bitmap",
-          "name": "IMAGE_FACE_RELAXED",
-          "file": "images/face_relaxed.png"
-        },
-        {
-          "type": "bitmap",
-          "name": "IMAGE_FACE_CALM",
-          "file": "images/face_calm.png"
-        },
-        {
-          "type": "bitmap",
-          "name": "IMAGE_FACE_ALERT",
-          "file": "images/face_alert.png"
-        },
-        {
-          "type": "bitmap",
-          "name": "IMAGE_FACE_ANXIOUS",
-          "file": "images/face_anxious.png"
-        }
+        { "type": "bitmap", "name": "IMAGE_FACE_MIA_RELAXED", "file": "images/faces/mia/relaxed.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_MIA_CALM", "file": "images/faces/mia/calm.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_MIA_ALERT", "file": "images/faces/mia/alert.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_MIA_ANXIOUS", "file": "images/faces/mia/anxious.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_KAI_RELAXED", "file": "images/faces/kai/relaxed.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_KAI_CALM", "file": "images/faces/kai/calm.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_KAI_ALERT", "file": "images/faces/kai/alert.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_KAI_ANXIOUS", "file": "images/faces/kai/anxious.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_NOVA_RELAXED", "file": "images/faces/nova/relaxed.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_NOVA_CALM", "file": "images/faces/nova/calm.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_NOVA_ALERT", "file": "images/faces/nova/alert.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_NOVA_ANXIOUS", "file": "images/faces/nova/anxious.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_REX_RELAXED", "file": "images/faces/rex/relaxed.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_REX_CALM", "file": "images/faces/rex/calm.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_REX_ALERT", "file": "images/faces/rex/alert.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_REX_ANXIOUS", "file": "images/faces/rex/anxious.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_CAT_RELAXED", "file": "images/faces/cat/relaxed.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_CAT_CALM", "file": "images/faces/cat/calm.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_CAT_ALERT", "file": "images/faces/cat/alert.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_CAT_ANXIOUS", "file": "images/faces/cat/anxious.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_DOG_RELAXED", "file": "images/faces/dog/relaxed.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_DOG_CALM", "file": "images/faces/dog/calm.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_DOG_ALERT", "file": "images/faces/dog/alert.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_DOG_ANXIOUS", "file": "images/faces/dog/anxious.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_FOX_RELAXED", "file": "images/faces/fox/relaxed.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_FOX_CALM", "file": "images/faces/fox/calm.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_FOX_ALERT", "file": "images/faces/fox/alert.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_FOX_ANXIOUS", "file": "images/faces/fox/anxious.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_OWL_RELAXED", "file": "images/faces/owl/relaxed.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_OWL_CALM", "file": "images/faces/owl/calm.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_OWL_ALERT", "file": "images/faces/owl/alert.png" },
+        { "type": "bitmap", "name": "IMAGE_FACE_OWL_ANXIOUS", "file": "images/faces/owl/anxious.png" }
       ]
     }
   }
